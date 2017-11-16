@@ -47,7 +47,7 @@ public class AwesomeGeoFinderConfiguration extends WebMvcConfigurerAdapter {
 		ds.setDriverClassName("com.mysql.jdbc.Driver");
 		ds.setUrl("jdbc:mysql://localhost:3306/agf");
 		ds.setUsername("root");
-		ds.setPassword("root");
+		ds.setPassword("");
 		return ds;
 
 	}

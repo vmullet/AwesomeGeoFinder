@@ -18,7 +18,7 @@
 	crossorigin="" />
 <link rel="stylesheet" href="css/style.css">
 
-<title>Awesome Geo Finder - Menu</title>
+<title>Awesome Geo Finder - Connexion</title>
 
 </head>
 <body>
@@ -32,10 +32,29 @@
 				Awesome GeoFinder<br> <small class="text-muted">Learn
 					geography smartly</small>
 			</h2>
-			
+
 			<div class="content-area">
-			<a href="login.html" class="btn btn-info btn-lg">SE CONNECTER</a>
-			<a href="register.html" class="btn btn-info btn-lg">S'ENREGISTRER</a>
+
+				<div id="form-messages">
+				</div>
+
+				<form id="login-form" role="form" method="post" action="rest/user/login">
+					<div class="form-group">
+						<label for="email" class="lb-md">Login</label> <input type="text"
+							class="form-control text-center" name="login" id="txt_user_login">
+					</div>
+					<div class="form-group">
+						<label for="pwd" class="lb-md">Password</label> <input type="password"
+							class="form-control text-center" name="password" id="txt_user_password">
+					</div>
+					<div class="checkbox">
+						<label class="lb-md"><input type="checkbox" id="chk_remember">Remember me</label>
+					</div>
+					<a href="index.html" class="btn btn-info btn-lg">Return to menu</a>
+					<button type="submit" class="btn btn-default btn-lg">Log in</button>
+					<button type="reset" class="btn btn-warning btn-lg">Reset</button>
+				</form>
+
 			</div>
 
 		</div>
@@ -60,6 +79,7 @@
 
 	<script src="js/messageUtil.js"></script>
 	<script src="js/loginForm.js"></script>
+	<script src="js/login.js"></script>
 
 </body>
 </html>

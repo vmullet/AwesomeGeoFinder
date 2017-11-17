@@ -181,7 +181,7 @@ game.prototype.showResults = function() {
 	            method: 'get'
 	        }).done(function (response) {
 	        	self.setTitle("Résultats - Joueur : " + sessionStorage.getItem('agf.current_username'));
-	            content += "<table class='table table-striped'><thead><tr><th>Tour n°</th><th>Ville</th><th>Score</th><th>Help ?</th></tr></thead>";
+	            content += "<table class='table table-striped'><thead><tr><th>Tour n°</th><th>Ville</th><th>Score</th><th>Aide ?</th></tr></thead>";
 	            content+='<tbody>';
 	            for (var i = 0 ; i < response.length ; i++) {
 	            	totalScore += response[i]['score'];

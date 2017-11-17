@@ -78,3 +78,7 @@ figure img {
 figure figcaption {
     text-align: center;
 }
+
+#btn_quit {
+	margin-top:5px;
+}

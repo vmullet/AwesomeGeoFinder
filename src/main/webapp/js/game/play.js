@@ -59,6 +59,21 @@ $(function() {
 			agfGame.showResults();
 		});
 		
+		$("#btn_quit").on('click',function() {
+			
+			$.confirm({
+			    title: 'Quitter le jeu',
+			    content: 'Etes-vous sûr ? Cette action est irréversible',
+			    buttons: {
+			        Oui: function () {
+			            location.href = "index.html";
+			        },
+			        Non: function () {}
+			    }
+			});
+			
+		});
+		
 		
 	} else {
 		location.href = "login.html?not-logged"

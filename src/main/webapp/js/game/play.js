@@ -19,47 +19,80 @@ $(function() {
 		var btnNextCity = $("#btn_next_city");
 		var btnHelp = $("#btn_help");
 		var btnResults = $("#btn_results");
+		var btnQuit = $("#btn_quit");
 		var btnReplay = $("#btn_replay");
-		btnResults.hide();
-		btnReplay.hide();
+		var btnConfirmMarker = $("#btn_confirm_marker");
+		var btnRemoveMarker = $("#btn_remove_marker");
+		var selectedCoordinate = null;
 		var map = new agfMap(L.map("mapid"));
-		var agfGame = new game(map,txtCity,txtTurn,txtScore,txtHelp,btnNextCity,btnHelp,btnResults,btnReplay);
+		var agfGame = new game(map,txtCity,txtTurn,txtScore,txtHelp,btnNextCity,btnHelp,btnResults,btnReplay,btnQuit,btnConfirmMarker,btnRemoveMarker);
 		agfGame.initGame();
 		agfGame.startGame();
 		map.mapObj.on('dblclick',function(e) {
 			if (!agfGame.isFinished) {
-				map.addMarker(e.latlng);
-				map.drawLine(e.latlng,agfGame.getCurrentCity().getLatLng());
-				var distance = parseInt(map.getDistance(e.latlng,agfGame.getCurrentCity().getLatLng())/1000);
-				agfGame.setScore(distance);
+				if (selectedCoordinate == null) {
+					selectedCoordinate = e;
+					map.addMarker(selectedCoordinate.latlng);
+					agfGame.setConfirmMode(true);
+				} else {
+					MessageUtil.showPopup("Avertissement","Vous avez déjà placé un marqueur");
+				}
+			} else {
+				MessageUtil.showPopup("Avertissement","La partie est déjà terminée");
 			}
 		});
 		
-		$("#btn_next_city").on('click',function() {
+		btnConfirmMarker.on('click',function() {
+			if (selectedCoordinate != null) {
+				agfGame.showAnswer();
+				map.drawLine(selectedCoordinate.latlng,agfGame.getCurrentCity().getLatLng());
+				var distance = parseInt(map.getDistance(selectedCoordinate.latlng,agfGame.getCurrentCity().getLatLng())/1000);
+				agfGame.setScore(distance);
+				agfGame.setConfirmMode(false);
+				btnNextCity.show();
+				selectedCoordinate = null;
+			} else {
+				MessageUtil.showPopup("Avertissement","Veuillez sélectionner un emplacement sur la carte");
+			}
+			
+		});
+		
+		btnRemoveMarker.on('click',function() {
+			if (selectedCoordinate != null) {
+				var remove = L.marker(selectedCoordinate.latlng);
+				map.removeMarker(remove);
+				selectedCoordinate = null;
+				agfGame.setConfirmMode(false);
+			} else {
+				MessageUtil.showPopup("Avertissement","Aucun marqueur à supprimer");
+			}
+		});
+		
+		btnNextCity.on('click',function() {
 			if (!agfGame.isFinished) {
 				if (agfGame.turnScore != -1) {
 					agfGame.saveTurn();
 				} else {
-					alert('Veuillez jouer');
+					MessageUtil.showPopup('Avertissement','Veuillez jouer');
 				}
 			}
 		});
 		
-		$("#btn_help").on('click',function() {
+		btnHelp.on('click',function() {
 			if (!agfGame.isFinished) {
 				if (agfGame.turnScore == -1) {
 					agfGame.getHelp();
 				} else {
-					alert('Vous avez déjà joué,passez à la prochaine ville');
+					MessageUtil.showPopup('Avertissement','Vous avez déjà joué,passez à la prochaine ville');
 				}
 			}
 		});
 		
-		$("#btn_results").on('click',function() {
+		btnResults.on('click',function() {
 			agfGame.showResults();
 		});
 		
-		$("#btn_quit").on('click',function() {
+		btnQuit.on('click',function() {
 			
 			$.confirm({
 			    title: 'Quitter le jeu',

@@ -1,4 +1,16 @@
-function game(map,txtCity,txtTurn,txtScore,txtHelp,btnNextCity,btnHelp,btnResults,btnReplay) {
+function game(map,
+		txtCity,
+		txtTurn,
+		txtScore,
+		txtHelp,
+		btnNextCity,
+		btnHelp,
+		btnResults,
+		btnReplay,
+		btnQuit,
+		btnConfirmMarker,
+		btnRemoveMarker) 
+{
 	this.mymap = map;
 	this.capitals = new Array();
 	this.cityIndex = -1;
@@ -7,6 +19,7 @@ function game(map,txtCity,txtTurn,txtScore,txtHelp,btnNextCity,btnHelp,btnResult
 	this.turnScoreMultiplier = 1;
 	this.turnHelp = false;
 	this.counterHelp = 2;
+	this.totalScore = 0;
 	this.isFinished = false;
 	this.txtCity = txtCity;
 	this.txtTurn = txtTurn;
@@ -16,19 +29,26 @@ function game(map,txtCity,txtTurn,txtScore,txtHelp,btnNextCity,btnHelp,btnResult
 	this.btnHelp = btnHelp;
 	this.btnResults = btnResults;
 	this.btnReplay = btnReplay;
+	this.btnQuit = btnQuit;
+	this.btnConfirmMarker = btnConfirmMarker;
+	this.btnRemoveMarker = btnRemoveMarker;
 	
 	this.nextCity = function() {
 		this.cityIndex++;
 		this.txtCity.text(this.capitals[this.cityIndex].name);
-		this.mymap.showCapital(this.capitals[this.cityIndex]);
+		//this.mymap.showCapital(this.capitals[this.cityIndex]);
 	}
 	
 	
 }
 
-
 game.prototype.initGame = function() {
 	this.txtHelp.text(this.counterHelp);
+	this.btnNextCity.hide();
+	this.btnResults.hide();
+	this.btnReplay.hide();
+	this.btnConfirmMarker.hide();
+	this.btnRemoveMarker.hide();
 }
 
 game.prototype.startGame = function() {
@@ -46,6 +66,9 @@ game.prototype.startGame = function() {
 				sessionStorage.setItem('agf.gameId',response['id']);
 				self.mymap.init();
 				self.loadRandomCapitals();
+			} else {
+				MessageUtil.showPopup("Erreur","Problème lors de la création de la partie");
+				location.href = "index.html";
 			}
 		});
 	
@@ -69,7 +92,7 @@ game.prototype.getHelp = function() {
 				break;
 		}
 	} else {
-		alert('Vous ne pouvez plus bénéficier de l aide');
+		MessageUtil.showPopup("Avertissement","Vous ne pouvez plus bénéficier de l'aide");
 	}
 	
 }
@@ -77,8 +100,13 @@ game.prototype.getHelp = function() {
 game.prototype.setScore = function(score) {
 	if (this.turnScore == -1) {
 		this.turnScore = score*this.turnScoreMultiplier;
+		this.totalScore += this.turnScore;
 		this.txtScore.text(this.turnScore + ' km');
 	}
+}
+
+game.prototype.showAnswer = function() {
+	this.mymap.addCapitalMarker(this.capitals[this.cityIndex]);
 }
 
 game.prototype.nextTurn = function() {
@@ -86,10 +114,12 @@ game.prototype.nextTurn = function() {
 	this.turnScoreMultiplier = 1;
 	this.turnHelp = false;
 	this.txtScore.text('');
+	this.btnNextCity.hide();
 	this.mymap.removeMarkers();
 	if (this.turnValue < 10) {
 		this.turnValue++;
 		this.txtTurn.text(this.turnValue);
+		this.mymap.showWorld();
 		this.nextCity();
 	} else {
 		this.endGame();
@@ -97,10 +127,9 @@ game.prototype.nextTurn = function() {
 	
 }
 
-
-
 game.prototype.endGame = function() {
-	this.txtCity.text('');
+	this.txtCity.text('Fin de la partie');
+	this.txtScore.text(this.totalScore + ' km');
 	this.mymap.showWorld();
 	this.btnNextCity.hide();
 	this.btnHelp.hide();
@@ -114,7 +143,16 @@ game.prototype.getCurrentCity = function() {
 	return this.capitals[this.cityIndex];
 }
 
-
+game.prototype.setConfirmMode = function(enable) {
+	if (enable) {
+		this.btnConfirmMarker.show();
+		this.btnRemoveMarker.show();
+	} else {
+		this.btnConfirmMarker.hide();
+		this.btnRemoveMarker.hide();
+	}
+	
+}
 
 game.prototype.loadRandomCapitals = function() {
 	var self = this;

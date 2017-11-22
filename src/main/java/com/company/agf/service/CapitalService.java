@@ -24,6 +24,8 @@ import com.company.agf.repository.ICapitalRepository;
 @Transactional
 public class CapitalService {
 
+	public static final int RANDOM_GENERATED = 10;
+	
 	@Autowired
 	private ICapitalRepository repository;
 	
@@ -45,10 +47,12 @@ public class CapitalService {
 	public List<CapitalDO> getRandomList() {
 		List<CapitalDO> cdo = new ArrayList<CapitalDO>();
 		Long total = repository.count();
-		Random r = new Random();
-		for (int i = 0 ; i < 10 ; i++) {
-			long randomIndex = 1+((long)(r.nextDouble() * (total-1)));
-			cdo.add(repository.findOne(randomIndex));
+		if (total > 0) {
+			Random r = new Random();
+			for (int i = 0 ; i < RANDOM_GENERATED ; i++) {
+				long randomIndex = 1+((long)(r.nextDouble() * (total-1)));
+				cdo.add(repository.findOne(randomIndex));
+			}
 		}
 		
 		return cdo;

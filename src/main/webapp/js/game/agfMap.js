@@ -19,11 +19,17 @@ agfMap.prototype.addMarker = function(coord) {
 	
 }
 
+agfMap.prototype.addCapitalMarker = function(capital) {
+	var marker = L.marker(capital.getLatLng()).addTo(this.mapObj);
+	marker.bindPopup("<b>City : </b>" + capital.name + "<br><b>Country : </b> " + capital.country).openPopup();
+	this.markers.push(marker);
+}
+
 agfMap.prototype.showCapital = function(capital) {
 	var marker = L.marker(capital.getLatLng()).addTo(this.mapObj);
 	marker.bindPopup("<b>City : </b>" + capital.name + "<br><b>Country : </b> " + capital.country).openPopup();
 	this.markers.push(marker);
-	this.mapObj.setView(capital.getLatLng()).setZoom(5);
+	//this.mapObj.setView(capital.getLatLng()).setZoom(5);
 	
 }
 
@@ -34,6 +40,16 @@ agfMap.prototype.showWorld = function() {
 agfMap.prototype.removeMarkers = function() {
 	for (var i = 0 ; i < this.markers.length ; i++) {
 		this.mapObj.removeLayer(this.markers[i]);
+	}
+	this.markers = new Array();
+}
+
+agfMap.prototype.removeMarker = function(marker) {
+	for (var i = 0 ; i < this.markers.length ; i++) {
+		if (this.markers[i].getLatLng() == marker.getLatLng()) {
+			this.mapObj.removeLayer(this.markers[i]);
+			break;
+		}
 	}
 }
 

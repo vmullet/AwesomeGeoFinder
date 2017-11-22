@@ -11,3 +11,11 @@ MessageUtil.reset = function() {
 	container.removeClass('alert alert-danger alert-warning alert-success');
 	container.html('');
 }
+
+MessageUtil.showPopup = function(titleText,contentText) {
+	$.alert({
+	    icon: 'fa fa-warning',
+	    title: titleText,
+	    content: contentText
+	});
+}
